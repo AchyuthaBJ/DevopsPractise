@@ -1,44 +1,79 @@
-pipeline{
-    
+```groovy
+pipeline {
     agent any
 
-    stages{
-        stage("Directory change and getting the latest pull"){
-            steps{
-                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple"){
-                    echo "In the project Directory "
+    stages {
+
+        stage("Directory Change") {
+            steps {
+                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple") {
+                    echo "In the project directory"
                     bat "dir"
                 }
             }
         }
-        //
-        stage("Inital Scripts"){
-            steps{
-                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple"){
-                    echo"##############################################################################"
-                    echo "installing the dependency"
-                    bat ".\\FastAPIENV\\Scripts\\python.exe -m pip install -r requirements.txt"
-                    echo"##############################################################################"
-                    echo "launching the uvicorn server and running the main.py file"
-                    bat ".\\FastAPIENV\\Scripts\\python.exe -c import subprocess; subprocess.Popen(['.\\\\FastAPIENV\\\\Scripts\\\\python.exe', '-m', 'uvicorn', 'main:app', '--host', '127.0.0.1', '--port', '8000'], creationflags=subprocess.CREATE_NO_WINDOW)"   
-                }
-            }
-        }
-        stage("Testing"){
-            steps{
-                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple"){
-                    bat ".\\FastAPIENV\\Scripts\\python.exe -m pytest test.py"
-                }
-            }
-        }
-        
 
-        stage("Clean up"){
-            steps{
-                echo "completed automation"
+        stage("Install Dependencies") {
+            steps {
+                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple") {
+                    echo "Installing dependencies"
+
+                    bat '''
+                        .\\FastAPIENV\\Scripts\\python.exe -m pip install -r requirements.txt
+                    '''
+                }
             }
         }
-    
+
+        stage("Start Uvicorn") {
+            steps {
+                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple") {
+                    echo "Starting Uvicorn in the background"
+
+                    bat '''
+                        .\\FastAPIENV\\Scripts\\python.exe -c "import subprocess; subprocess.Popen(['.\\\\FastAPIENV\\\\Scripts\\\\python.exe', '-m', 'uvicorn', 'main:app', '--host', '127.0.0.1', '--port', '8000'], creationflags=subprocess.CREATE_NO_WINDOW, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)"
+                    '''
+                }
+            }
+        }
+
+        stage("Wait for Uvicorn") {
+            steps {
+                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple") {
+                    echo "Waiting for the FastAPI server"
+
+                    bat '''
+                        .\\FastAPIENV\\Scripts\\python.exe -c "import time, requests; url='http://127.0.0.1:8000'; exec('for i in range(30):\\n try:\\n  requests.get(url, timeout=2); break\\n except requests.RequestException:\\n  time.sleep(1)\\nelse:\\n raise SystemExit(\\'Uvicorn failed to start\\')')"
+                    '''
+                }
+            }
+        }
+
+        stage("Testing") {
+            steps {
+                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple") {
+                    echo "Running pytest"
+
+                    bat '''
+                        .\\FastAPIENV\\Scripts\\python.exe -m pytest test.py
+                    '''
+                }
+            }
+        }
     }
 
+    post {
+        always {
+            echo "Stopping Uvicorn and cleaning up"
+
+            dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple") {
+                bat '''
+                    .\\FastAPIENV\\Scripts\\python.exe -c "import subprocess; subprocess.run(['taskkill', '/F', '/IM', 'python.exe', '/FI', 'WINDOWTITLE eq Uvicorn'], capture_output=True)"
+                '''
+            }
+
+            echo "Pipeline completed"
+        }
+    }
 }
+```
