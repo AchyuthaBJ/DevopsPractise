@@ -3,7 +3,7 @@ pipeline{
     agent any
 
     stages{
-        stage("Directory change"){
+        stage("Directory change and getting the latest pull"){
             steps{
                 dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple"){
                     echo "In the project Directory "
@@ -31,6 +31,13 @@ pipeline{
                 dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple"){
                     bat ".\\FastAPIENV\\Scripts\\python.exe -m pytest test.py"
                 }
+            }
+        }
+        stage("Integration"){
+            steps{
+                git add .
+                git commit -m ""
+                git push
             }
         }
 
