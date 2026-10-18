@@ -20,7 +20,7 @@ pipeline{
                     bat ".\\FastAPIENV\\Scripts\\python.exe -m pip install -r requirements.txt"
                     echo"##############################################################################"
                     echo "launching the uvicorn server and running the main.py file"
-                    bat ".\\FastAPIENV\\Scripts\\python.exe -c "import subprocess; subprocess.Popen(['.\\\\FastAPIENV\\\\Scripts\\\\python.exe', '-m', 'uvicorn', 'main:app', '--host', '127.0.0.1', '--port', '8000'], creationflags=subprocess.CREATE_NO_WINDOW)"   
+                    bat ".\\FastAPIENV\\Scripts\\python.exe -c import subprocess; subprocess.Popen(['.\\\\FastAPIENV\\\\Scripts\\\\python.exe', '-m', 'uvicorn', 'main:app', '--host', '127.0.0.1', '--port', '8000'], creationflags=subprocess.CREATE_NO_WINDOW)"   
                 }
             }
         }
