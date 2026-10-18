@@ -33,13 +33,7 @@ pipeline{
                 }
             }
         }
-        stage("Integration"){
-            steps{
-                git add .
-                git commit -m ""
-                git push
-            }
-        }
+        
 
         stage("Clean up"){
             steps{
