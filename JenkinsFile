@@ -1,0 +1,45 @@
+pipeline{
+    
+    agent any
+
+    stages{
+        stage("Directory change"){
+            steps{
+                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple"){
+                    echo "In the project Directory "
+                    bat "dir"
+                    git fetch
+                    git pull
+                }
+            }
+        }
+        //
+        stage("Inital Scripts"){
+            steps{
+                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple"){
+                    echo"##############################################################################"
+                    echo "installing the dependency"
+                    bat ".\\FastAPIENV\\Scripts\\python.exe -m pip install -r requirements.txt"
+                    echo"##############################################################################"
+                    echo "launching the uvicorn server and running the main.py file"
+                    bat ".\\FastAPIENV\\Scripts\\python.exe -m uvicorn main:app --reload"   
+                }
+            }
+        }
+        stage("Testing"){
+            steps{
+                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple"){
+                    bat ".\\FastAPIENV\\Scripts\\python.exe -m pytest test.py"
+                }
+            }
+        }
+
+        stage("Clean up"){
+            steps{
+                echo "completed automation"
+            }
+        }
+    
+    }
+
+}
