@@ -8,8 +8,6 @@ pipeline{
                 dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple"){
                     echo "In the project Directory "
                     bat "dir"
-                    git fetch
-                    git pull
                 }
             }
         }
