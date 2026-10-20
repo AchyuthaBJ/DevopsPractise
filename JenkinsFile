@@ -5,7 +5,7 @@ pipeline {
 
         stage("Directory Change") {
             steps {
-                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple") {
+                dir("C:/Users/yuvab/OneDrive/Desktop/DevopsPractise") {
                     echo "In the project directory"
                     bat "dir"
                 }
