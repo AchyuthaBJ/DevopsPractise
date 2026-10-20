@@ -14,4 +14,4 @@ def test_allNotes():
 
 def test_notesID():
     response = client.get("/notes/6")
-    assert response.json == requests.get("http://127.0.0.1:8000/notes/6").json()
+    assert response.json() == requests.get("http://127.0.0.1:8000/notes/6").json()
