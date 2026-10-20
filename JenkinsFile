@@ -14,7 +14,7 @@ pipeline {
 
         stage("Install Dependencies") {
             steps {
-                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple") {
+                dir("C:/Users/yuvab/OneDrive/Desktop/DevopsPractise") {
                     echo "Installing dependencies"
 
                     bat '''
@@ -26,7 +26,7 @@ pipeline {
 
         stage("Start Uvicorn") {
             steps {
-                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple") {
+                dir("C:/Users/yuvab/OneDrive/Desktop/DevopsPractise") {
                     echo "Starting Uvicorn in the background"
 
                     bat '''
@@ -38,7 +38,7 @@ pipeline {
 
         stage("Wait for Uvicorn") {
             steps {
-                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple") {
+                dir("C:/Users/yuvab/OneDrive/Desktop/DevopsPractise") {
                     echo "Waiting for the FastAPI server"
 
                     bat '''
@@ -50,7 +50,7 @@ pipeline {
 
         stage("Testing") {
             steps {
-                dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple") {
+                dir("C:/Users/yuvab/OneDrive/Desktop/DevopsPractise") {
                     echo "Running pytest"
 
                     bat '''
@@ -65,7 +65,7 @@ pipeline {
         always {
             echo "Stopping Uvicorn and cleaning up"
 
-            dir("C:/Users/yuvab/OneDrive/Desktop/FastAPI_Simple") {
+            dir("C:/Users/yuvab/OneDrive/Desktop/DevopsPractise") {
                 bat '''
                     .\\FastAPIENV\\Scripts\\python.exe -c "import subprocess; subprocess.run(['taskkill', '/F', '/IM', 'python.exe', '/FI', 'WINDOWTITLE eq Uvicorn'], capture_output=True)"
                 '''
